@@ -15,7 +15,7 @@
 | 1-5 | Smart Pointers | `unique_ptr`, `shared_ptr`, `weak_ptr`, ownership transfer |
 | 1-6 | Arrays & `std::array` / `std::vector` | stack vs heap array, iterator 基礎 |
 
-## Phase 2 — OOP 核心
+## Phase 2 — OOP Core & Virtual Dispatch
 
 | # | 主題 | 重點 |
 |---|------|------|
@@ -70,11 +70,18 @@
 
 | # | 主題 | 重點 |
 |---|------|------|
-| 7-1 | Compilation Model | preprocessor, compilation unit, linking |
-| 7-2 | Header / Source 拆分 | include guard, forward declaration, ODR |
-| 7-3 | CMake | `CMakeLists.txt`, target, library linking |
-| 7-4 | Sanitizers & Debugging | ASan, UBSan, Valgrind, gdb/lldb 基本操作 |
-| 7-5 | Unit Testing | Google Test / Catch2 基礎 |
+| 7-1 | Compilation Model | preprocessor, compilation unit, linking 四階段 |
+| 7-2 | Preprocessor & Macro | `#define`, function-like macro, stringification `#`, token pasting `##`, macro vs template/codegen |
+| 7-3 | Include 機制 | `<>` vs `""`, include path 解析規則, `-I` flag, 系統 header 位置 |
+| 7-4 | Namespace 機制 | namespace 作用, `using` 的危險, ADL, anonymous namespace |
+| 7-5 | Header / Source 拆分 | include guard, `#pragma once`, forward declaration, ODR |
+| 7-6 | Library 類型 | static library (`.a`), dynamic library (`.so`/`.dylib`/`.dll`), `dlopen` / `dlsym`, 連結差異 |
+| 7-7 | 套件管理對比 | C++ 沒有標準 package manager，vs Go modules / Rust cargo / Python pip |
+| 7-8 | CMake 基礎 | `CMakeLists.txt`, target, `find_package`, `target_link_libraries` |
+| 7-9 | 第三方套件管理 | vcpkg, Conan, FetchContent, git submodule 等常見做法 |
+| 7-10 | Sanitizers & Debugging | ASan, UBSan, Valgrind, gdb/lldb 基本操作 |
+| 7-11 | Unit Testing | Google Test / Catch2 基礎 |
+| 7-12 | Dynamic Loading | `.so`/`.dylib` 載入時機、`dlopen` / `dlsym`, plugin 架構、memory mapping |
 
 ## Phase 8 — Design Patterns & 實戰
 
@@ -90,33 +97,44 @@
 
 | # | 主題 | 重點 |
 |---|------|------|
-| 9-1 | File I/O | `std::fstream`, binary read/write, `mmap` |
+| 9-1 | File I/O | `std::fstream`, text/binary file I/O 的定位 |
 | 9-2 | POSIX System Calls | `open`/`read`/`write`/`close`, file descriptor, `errno` |
-| 9-3 | Process Management | `fork`, `exec`, `wait`, pipe, signal handling |
-| 9-4 | Socket Programming | TCP/UDP socket, `bind`/`listen`/`accept`/`connect` |
-| 9-5 | 實戰：HTTP Server | 用 raw socket 寫一個簡易 HTTP server |
-| 9-6 | 實戰：Chat Room | 多執行緒 + socket，結合 Phase 6 concurrency |
+| 9-3 | Process Management | `fork`, `waitpid`, exit status |
+| 9-4 | Pipe & Signal | `pipe`, `sigaction`, signal handler 限制 |
+| 9-5 | Socket Programming | `socketpair`, socket read/write 模型 |
+| 9-6 | 實戰：HTTP Server Shape | HTTP request line parsing, response building |
 
 ## Phase 10 — Compiler & Language Internals
 
 | # | 主題 | 重點 |
 |---|------|------|
-| 10-1 | 編譯流程總覽 | preprocessing → compilation → assembly → linking 各階段產物 |
-| 10-2 | Binary Format | ELF / Mach-O 結構, `readelf`, `objdump`, section / symbol table 解讀 |
-| 10-3 | Lexer | tokenization 原理, 手寫一個簡單 lexer |
-| 10-4 | Parser & AST | recursive descent parser, 建構 AST |
-| 10-5 | Semantic Analysis | type checking, symbol table |
-| 10-6 | Code Generation | 輸出簡易 bytecode 或 x86 assembly |
-| 10-7 | 實戰：Mini Language | 整合 10-3 ~ 10-6，實作一個能跑的小型語言直譯器/編譯器 |
+| 10-1 | Lexer | tokenization 原理, 手寫一個簡單 lexer |
+| 10-2 | Parser & AST | recursive descent parser, 建構 AST |
+| 10-3 | Evaluator | 遞迴走訪 AST 求值 |
+| 10-4 | Symbol Table | scope chain, shadowing, name lookup |
+| 10-5 | Bytecode VM | stack machine, instruction execution |
+| 10-6 | Code Generation | AST 輸出 bytecode 的基本形狀 |
+| 10-7 | 實戰：Mini Language | 整合 lexer/parser/scope/執行概念，實作小型語言 |
+
+## Phase 11 — Concurrent 實戰：Mini Tokio-style Runtime
+
+| # | 主題 | 重點 |
+|---|------|------|
+| 11-1 | Runtime::spawn | 用 `packaged_task` 包 callable，回傳 `future` |
+| 11-2 | join_all | 等待多個 `future` 全部完成並收集結果 |
+| 11-3 | Timer Tasks | `spawn_after`, 延遲後把 task 排進 runtime |
+| 11-4 | Mini Tokio-style Runtime | fixed worker threads, task queue, graceful shutdown |
+| 11-5 | 實戰練習 | parallel map, timer, pipeline |
 
 ---
 
 ## 建議學習順序
 
 ```
-Phase 1 → Phase 2 → Phase 5 (move/lambda) → Phase 3 → Phase 4 → Phase 6 → Phase 7 → Phase 8 → Phase 9 → Phase 10
+Phase 1 → Phase 2 → Phase 5 (move/lambda) → Phase 3 → Phase 4 → Phase 6 → Phase 7 → Phase 8 → Phase 9 → Phase 10 → Phase 11
 ```
 
 - Phase 5 的 move semantics 和 lambda 建議在 templates 之前學，因為後面的 STL 和 template 大量依賴這些概念。
 - Phase 9 依賴 Phase 6 (concurrency) 的知識，建議按順序。
-- Phase 10 相對獨立，可以在任何時間點開始，但建議放最後作為綜合應用。
+- Phase 10 相對獨立，可以在任何時間點開始，但建議在熟悉建置與 STL 後再做。
+- Phase 11 依賴 Phase 6 的 thread/future 和 Phase 5 的 `invoke_result_t`，適合作為 concurrency 綜合應用。
