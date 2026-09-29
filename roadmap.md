@@ -143,16 +143,26 @@
 | 12-3 | Binder / AIDL IPC & FD 跨行程傳遞 | `Bp*` Proxy / `Bn*` Stub 架構、`SCM_RIGHTS` 零拷貝 FD 傳遞 |
 | 12-4 | HAL Async Session、`ThreadPool` & `ScopedTrace` | `EnqueueWork` 非同步處理、Camera HAL Callback、`ATRACE_CALL()` |
 
+## Phase 13 — Perf Counters, Kernel & Compiler Debugging
+
+| # | 主題 | 重點 |
+|---|------|------|
+| 13-1 | Perfetto & Ftrace (`trace_marker`) | Sync Slice (`B`/`E`)、跨執行緒 Async Slice (`S`/`F` + cookie)、Counter Track (`C`) |
+| 13-2 | PMU Perf Counters & Cache (`simpleperf`) | `steady_clock`、P99 Tail Latency、IPC / Cache Miss 判讀、False Sharing (`alignas(64)`) |
+| 13-3 | Kernel & Driver Boundary Debugging | MMIO `volatile`、`D`-state hang 與 `-ETIMEDOUT`、零配置 Ring Buffer Flight Recorder、`debugfs`/`lockdep` |
+| 13-4 | Compiler Optimization & UB Traps | `-O0` vs `-O2` 差異、Strict Aliasing (`std::bit_cast`)、Signed Overflow UB、`DoNotOptimize`、`-fno-omit-frame-pointer` |
+| 13-5 | Binary Symbols, Tombstone & HWASan | `SIGSEGV` struct offset 空指標判讀、`llvm-symbolizer`/`c++filt`、ARM64 HWASan Top-Byte Pointer Tagging |
+
 ---
 
 ## 建議學習順序
 
 ```
-Phase 1 → Phase 2 → Phase 5 (move/lambda) → Phase 3 → Phase 4 → Phase 6 → Phase 7 → Phase 8 → Phase 9 → Phase 12 (Android/HAL) → Phase 10 / Phase 11
+Phase 1 → Phase 2 → Phase 5 (move/lambda) → Phase 3 → Phase 4 → Phase 6 → Phase 7 → Phase 8 → Phase 9 → Phase 12 (Android/HAL) → Phase 13 (Perf/Kernel/Compiler Debug) → Phase 10 / Phase 11
 ```
 
 - Phase 5 的 move semantics 和 lambda 建議在 templates 之前學，因為後面的 STL 和 template 大量依賴這些概念。
 - Phase 9 依賴 Phase 6 (concurrency) 的知識，建議按順序。
-- **Android OS / HAL 開發者路線**：完成 Phase 1~9 後可直接進入 **Phase 12**，串聯 `-fno-exceptions`、`Sigil` Factory、`GUARDED_BY`、`unique_fd`、`mmap` 與 Binder/HAL 非同步架構。
+- **Android OS / HAL 開發者路線**：完成 Phase 1~9 後可直接進入 **Phase 12** 與 **Phase 13**，串聯 `-fno-exceptions`、`Sigil` Factory、`GUARDED_BY`、`unique_fd`、`mmap`、Binder/HAL 非同步架構，以及 Perfetto、PMU Perf Counters、Kernel Driver 與 Compiler/Tombstone 除錯實戰。
 - Phase 10 相對獨立，可以在任何時間點開始，但建議在熟悉建置與 STL 後再做。
 - Phase 11 依賴 Phase 6 的 thread/future 和 Phase 5 的 `invoke_result_t`，適合作為 concurrency 綜合應用。
