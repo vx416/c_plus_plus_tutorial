@@ -9,12 +9,14 @@ phase4 - STL Deep Dive/
 ├── 03_algorithms.cpp              # sort / find / transform / accumulate / ranges
 ├── 04_string_and_string_view.cpp  # string ownership / string_view lifetime
 ├── 05_vocabulary_types.cpp        # optional / variant / any
+├── 06_span_and_strong_id.cpp      # std::span 連續記憶體視圖 / StrongId 強型別包裝
 ├── exercises/
 │   ├── ex01_container_choice.cpp
 │   ├── ex02_iterator_range.cpp
 │   ├── ex03_algorithm_pipeline.cpp
 │   ├── ex04_string_view_parser.cpp
-│   └── ex05_variant_message.cpp
+│   ├── ex05_variant_message.cpp
+│   └── ex06_span_and_strong_id.cpp
 ├── Makefile
 └── README.md
 ```
@@ -60,6 +62,8 @@ algorithm  負責操作一段 iterator 範圍，例如 sort、find、transform
 | `optional<T>` | 可能有 T，也可能沒有 | 取代「特殊值代表不存在」 |
 | `variant<A, B>` | 多選一的型別安全 union | 用 `visit` 處理目前是哪一種 |
 | `any` | 可以裝任意型別 | 彈性高，但失去靜態型別資訊 |
+| `span<T>` | 不擁有連續記憶體的 view | 可同時接受 `vector` / `array` / raw array，支援 `subspan` 切片 |
+| `StrongId` | 強型別整數包裝 | 用空 Tag struct 讓 `SensorId` 與 `RequestId` 在編譯期無法混用 |
 
 ## Container 選擇
 
@@ -83,8 +87,9 @@ algorithm  負責操作一段 iterator 範圍，例如 sort、find、transform
 | ex03 | 03 Algorithms | 用 STL algorithm 做 filter/transform/sum | 中等 |
 | ex04 | 04 string_view | 用 `string_view` 切 key/value | 中等 |
 | ex05 | 05 vocabulary types | 用 `variant` 表示訊息並處理 | 中等 |
+| ex06 | 06 span & StrongId | 用 `std::span` 切封包 payload 並實作 `StrongId` | 中等 |
 
 ## 建議學習順序
 
-按 `01 -> 05` 讀。`02_iterators.cpp` 是理解 STL 的關鍵；如果一開始覺得抽象，
+按 `01 -> 06` 讀。`02_iterators.cpp` 是理解 STL 的關鍵；如果一開始覺得抽象，
 先看懂 `begin()` / `end()` / iterator invalidation，再回頭看 custom iterator。

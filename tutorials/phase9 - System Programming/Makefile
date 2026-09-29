@@ -2,10 +2,13 @@ CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra
 
 EXAMPLES = 01_file_io 02_posix_file_descriptors 03_process_management \
-           04_pipe_signal 05_socket_basics 06_mini_http_server
+           04_pipe_signal 05_socket_basics 06_mini_http_server \
+           07_unique_fd_and_ioctl 08_mmap_and_shared_memory \
+           09_io_multiplexing_poll
 
 EXERCISES = ex01_copy_file ex02_read_all_fd ex03_process_exit_status \
-            ex04_http_request_parse ex05_socketpair_echo
+            ex04_http_request_parse ex05_socketpair_echo \
+            ex06_unique_fd ex07_mmap_shared_buffer ex08_poll_event_loop
 
 BUILD_DIR = build
 

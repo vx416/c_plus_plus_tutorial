@@ -14,6 +14,7 @@
 | 1-4 | Ownership & RAII | 資源所有權概念, scope-based 生命週期, destructor 自動釋放 |
 | 1-5 | Smart Pointers | `unique_ptr`, `shared_ptr`, `weak_ptr`, ownership transfer |
 | 1-6 | Arrays & `std::array` / `std::vector` | stack vs heap array, iterator 基礎 |
+| 1-7 | Memory Layout & Bit Manipulation | fixed-width integers, struct alignment/padding, `packed`, register bitfields |
 
 ## Phase 2 — OOP Core & Virtual Dispatch
 
@@ -45,6 +46,7 @@
 | 4-3 | Algorithms | `sort`, `find`, `transform`, `accumulate`, ranges (C++20) |
 | 4-4 | `std::string` & `std::string_view` | SSO, lifetime 陷阱 |
 | 4-5 | `std::optional`, `std::variant`, `std::any` | sum type 與型別安全 |
+| 4-6 | `std::span` & `StrongId` | 連續記憶體非擁有視圖 (`subspan`)、強型別 ID 包裝 |
 
 ## Phase 5 — Modern C++ 特性
 
@@ -65,6 +67,8 @@
 | 6-3 | Condition Variable | producer-consumer pattern |
 | 6-4 | `std::async` & `std::future` | task-based concurrency |
 | 6-5 | Atomic & Memory Order | `std::atomic`, `memory_order` 基礎 |
+| 6-6 | Coroutines (C++20) | `co_return`, `co_yield`, `co_await`, state machine |
+| 6-7 | Clang Thread Safety Annotations | `-Wthread-safety`, `GUARDED_BY`, `LOCKS_EXCLUDED`, `*Locked()` 慣用法 |
 
 ## Phase 7 — 建置與工具鏈
 
@@ -82,6 +86,7 @@
 | 7-10 | Sanitizers & Debugging | ASan, UBSan, Valgrind, gdb/lldb 基本操作 |
 | 7-11 | Unit Testing | Google Test / Catch2 基礎 |
 | 7-12 | Dynamic Loading | `.so`/`.dylib` 載入時機、`dlopen` / `dlsym`, plugin 架構、memory mapping |
+| 7-13 | ABI 穩定性、Pimpl 與 Soong | API vs ABI、Pimpl Idiom、CMake vs Android `Android.bp` |
 
 ## Phase 8 — Design Patterns & 實戰
 
@@ -103,6 +108,9 @@
 | 9-4 | Pipe & Signal | `pipe`, `sigaction`, signal handler 限制 |
 | 9-5 | Socket Programming | `socketpair`, socket read/write 模型 |
 | 9-6 | 實戰：HTTP Server Shape | HTTP request line parsing, response building |
+| 9-7 | RAII `unique_fd` & `ioctl` | move-only FD wrapper、Linux Driver `ioctl` 控制模型 |
+| 9-8 | `mmap` & Zero-Copy Shared Memory | `MAP_SHARED` 零拷貝共享記憶體、`DMA-BUF`/`Gralloc` 基礎 |
+| 9-9 | I/O Multiplexing (`poll`) | 非阻塞多工事件迴圈（Android `Looper` / `epoll` 基礎） |
 
 ## Phase 10 — Compiler & Language Internals
 
@@ -126,15 +134,25 @@
 | 11-4 | Mini Tokio-style Runtime | fixed worker threads, task queue, graceful shutdown |
 | 11-5 | 實戰練習 | parallel map, timer, pipeline |
 
+## Phase 12 — Android Native & HAL Idioms
+
+| # | 主題 | 重點 |
+|---|------|------|
+| 12-1 | `-fno-exceptions`、`StatusOr<T>` & `Sigil` Factory | 無 Exception 環境下的錯誤傳遞與 Passkey 工廠模式 |
+| 12-2 | Intrusive Smart Pointers (`RefBase` / `sp<T>`) | 侵入式引用計數、`onFirstRef()`、`unique_ptr` Custom Deleter |
+| 12-3 | Binder / AIDL IPC & FD 跨行程傳遞 | `Bp*` Proxy / `Bn*` Stub 架構、`SCM_RIGHTS` 零拷貝 FD 傳遞 |
+| 12-4 | HAL Async Session、`ThreadPool` & `ScopedTrace` | `EnqueueWork` 非同步處理、Camera HAL Callback、`ATRACE_CALL()` |
+
 ---
 
 ## 建議學習順序
 
 ```
-Phase 1 → Phase 2 → Phase 5 (move/lambda) → Phase 3 → Phase 4 → Phase 6 → Phase 7 → Phase 8 → Phase 9 → Phase 10 → Phase 11
+Phase 1 → Phase 2 → Phase 5 (move/lambda) → Phase 3 → Phase 4 → Phase 6 → Phase 7 → Phase 8 → Phase 9 → Phase 12 (Android/HAL) → Phase 10 / Phase 11
 ```
 
 - Phase 5 的 move semantics 和 lambda 建議在 templates 之前學，因為後面的 STL 和 template 大量依賴這些概念。
 - Phase 9 依賴 Phase 6 (concurrency) 的知識，建議按順序。
+- **Android OS / HAL 開發者路線**：完成 Phase 1~9 後可直接進入 **Phase 12**，串聯 `-fno-exceptions`、`Sigil` Factory、`GUARDED_BY`、`unique_fd`、`mmap` 與 Binder/HAL 非同步架構。
 - Phase 10 相對獨立，可以在任何時間點開始，但建議在熟悉建置與 STL 後再做。
 - Phase 11 依賴 Phase 6 的 thread/future 和 Phase 5 的 `invoke_result_t`，適合作為 concurrency 綜合應用。

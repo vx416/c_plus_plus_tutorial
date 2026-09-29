@@ -4,19 +4,21 @@
 
 ```
 phase6 - Concurrency/
-├── 01_thread_jthread.cpp          # thread / jthread / join / detach / stop_token / stop_source
-├── 02_mutex_lock.cpp              # mutex / lock_guard / unique_lock
-├── 03_condition_variable.cpp      # producer-consumer pattern
-├── 04_async_future.cpp            # async / future / thread pool / packaged_task
-├── 05_atomic_memory_order.cpp     # atomic / memory order 基礎
-├── 06_coroutines.cpp              # coroutine / co_return / co_yield / co_await
+├── 01_thread_jthread.cpp             # thread / jthread / join / detach / stop_token / stop_source
+├── 02_mutex_lock.cpp                 # mutex / lock_guard / unique_lock
+├── 03_condition_variable.cpp         # producer-consumer pattern
+├── 04_async_future.cpp               # async / future / thread pool / packaged_task
+├── 05_atomic_memory_order.cpp        # atomic / memory order 基礎
+├── 06_coroutines.cpp                 # coroutine / co_return / co_yield / co_await
+├── 07_thread_safety_annotations.cpp  # Clang -Wthread-safety: GUARDED_BY / LOCKS_EXCLUDED
 ├── exercises/
 │   ├── ex01_parallel_sum.cpp
 │   ├── ex02_thread_safe_counter.cpp
 │   ├── ex03_blocking_queue.cpp
 │   ├── ex04_thread_pool_tasks.cpp
 │   ├── ex05_atomic_counter.cpp
-│   └── ex06_coroutine_generator.cpp
+│   ├── ex06_coroutine_generator.cpp
+│   └── ex07_guarded_by_session.cpp
 ├── Makefile
 └── README.md
 ```
@@ -42,6 +44,7 @@ thread / jthread          建立執行單位
 detach                    放棄管理 thread，必須特別注意生命週期
 stop_source / stop_token  中心化取消訊號與 worker 停止檢查
 mutex / lock              保護共享資料
+GUARDED_BY / *Locked()    在編譯期用 Clang 靜態分析強制檢查有沒有拿鎖
 condition_variable        讓 thread 等待某個條件成立
 future / async            取得背景工作結果
 thread pool               固定 worker 數量，明確控制 task queue
@@ -89,8 +92,9 @@ C++20 coroutine:
 | ex04 | 04 Async | thread pool 平行平方加總 | 中等 |
 | ex05 | 05 Atomic | atomic counter | 簡單 |
 | ex06 | 06 Coroutine | generator 產生整數序列 | 中等 |
+| ex07 | 07 Thread Safety | 使用 `GUARDED_BY` 與 `*Locked()` 實作安全佇列 | 中等 |
 
 ## 建議學習順序
 
-先看 `thread` 和 `mutex`。`condition_variable` 比較容易卡，重點是「永遠用 predicate 檢查條件」。
+先看 `thread` 和 `mutex`（搭配 `07_thread_safety_annotations.cpp` 的 `GUARDED_BY` 習慣）。`condition_variable` 比較容易卡，重點是「永遠用 predicate 檢查條件」。
 `atomic memory_order` 先懂 `relaxed`、`release/acquire` 的用途即可，不需要一開始就背完整記憶體模型。

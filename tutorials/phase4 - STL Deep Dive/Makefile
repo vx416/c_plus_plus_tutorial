@@ -2,10 +2,11 @@ CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra
 
 EXAMPLES = 01_containers 02_iterators 03_algorithms \
-           04_string_and_string_view 05_vocabulary_types
+           04_string_and_string_view 05_vocabulary_types \
+           06_span_and_strong_id
 
 EXERCISES = ex01_container_choice ex02_iterator_range ex03_algorithm_pipeline \
-            ex04_string_view_parser ex05_variant_message
+            ex04_string_view_parser ex05_variant_message ex06_span_and_strong_id
 
 BUILD_DIR = build
 

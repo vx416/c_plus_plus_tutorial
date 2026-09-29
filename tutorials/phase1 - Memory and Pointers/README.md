@@ -10,6 +10,7 @@ phase1 - Memory and Pointers/
 ├── 04_ownership_raii.cpp        # Ownership & RAII
 ├── 05_smart_pointers.cpp        # unique_ptr / shared_ptr / weak_ptr
 ├── 06_arrays_and_containers.cpp # array / vector / iterator
+├── 07_memory_layout_and_bits.cpp # struct alignment / padding / bit manipulation
 ├── exercises/                   # 練習題（有 assert 測試）
 │   ├── ex01_pointer_swap.cpp
 │   ├── ex02_array_reverse.cpp
@@ -17,7 +18,8 @@ phase1 - Memory and Pointers/
 │   ├── ex04_dynamic_matrix.cpp
 │   ├── ex05_raii_logger.cpp
 │   ├── ex06_unique_ptr_list.cpp
-│   └── ex07_vector_stats.cpp
+│   ├── ex07_vector_stats.cpp
+│   └── ex08_register_bitfields.cpp
 ├── Makefile
 └── README.md
 ```
@@ -78,7 +80,8 @@ g++ -std=c++17 -fsanitize=address -g exercises/ex04_dynamic_matrix.cpp -o ex04
 | ex05 | 04 RAII | 實作 ScopeLogger | 中等 |
 | ex06 | 05 Smart Pointers | 用 unique_ptr 實作 linked list | 中等 |
 | ex07 | 06 Containers | vector 統計、過濾、攤平 | 中等 |
+| ex08 | 07 Memory Layout & Bits | 硬體暫存器 bitfield R/W 與 struct 對齊最佳化 | 中等 |
 
 ## 建議學習順序
 
-按照編號 01 → 06 依序閱讀範例，每個章節讀完後做對應的練習題。
+按照編號 01 → 07 依序閱讀範例，每個章節讀完後做對應的練習題。

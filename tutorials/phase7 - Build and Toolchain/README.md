@@ -16,12 +16,14 @@ phase7 - Build and Toolchain/
 ├── 10_sanitizers_debugging.cpp    # ASan / UBSan / debugger basics
 ├── 11_unit_testing.cpp            # assert / test framework shape
 ├── 12_dynamic_loading.cpp         # .so loading, dlopen/dlsym, plugin shape
+├── 13_abi_stability_and_pimpl.cpp # ABI compatibility, Pimpl idiom, Android.bp vs CMake
 ├── exercises/
 │   ├── ex01_include_guard.cpp
 │   ├── ex02_macro_debug.cpp
 │   ├── ex03_namespace_api.cpp
 │   ├── ex04_static_library_shape.cpp
-│   └── ex05_assert_tests.cpp
+│   ├── ex05_assert_tests.cpp
+│   └── ex06_pimpl_sensor_driver.cpp
 ├── Makefile
 └── README.md
 ```
@@ -149,3 +151,4 @@ target_link_libraries(app PRIVATE mylib)
 | ex03 | Namespace | 設計 namespace API | 簡單 |
 | ex04 | Library | 模擬 library API 邊界 | 中等 |
 | ex05 | Unit Testing | assert-based test runner | 簡單 |
+| ex06 | ABI & Pimpl | 用 Pimpl Idiom 隱藏實作並維持固定 sizeof | 中等 |

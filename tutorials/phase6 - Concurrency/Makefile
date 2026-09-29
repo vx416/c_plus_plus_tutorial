@@ -1,11 +1,13 @@
 CXX = g++
-CXXFLAGS = -std=c++20 -Wall -Wextra -pthread
+CXXFLAGS = -std=c++20 -Wall -Wextra -Wno-unknown-warning-option -Wthread-safety -pthread
 
 EXAMPLES = 01_thread_jthread 02_mutex_lock 03_condition_variable \
-           04_async_future 05_atomic_memory_order 06_coroutines
+           04_async_future 05_atomic_memory_order 06_coroutines \
+           07_thread_safety_annotations
 
 EXERCISES = ex01_parallel_sum ex02_thread_safe_counter ex03_blocking_queue \
-            ex04_thread_pool_tasks ex05_atomic_counter ex06_coroutine_generator
+            ex04_thread_pool_tasks ex05_atomic_counter ex06_coroutine_generator \
+            ex07_guarded_by_session
 
 BUILD_DIR = build
 

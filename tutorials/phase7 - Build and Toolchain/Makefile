@@ -5,10 +5,11 @@ SANITIZE_FLAGS = -fsanitize=address,undefined -fno-omit-frame-pointer
 EXAMPLES = 01_compilation_model 02_preprocessor_macro 03_include_mechanism \
            04_namespace 05_header_source_split 06_library_types \
            07_package_management 08_cmake_basics 09_third_party_management \
-           10_sanitizers_debugging 11_unit_testing 12_dynamic_loading
+           10_sanitizers_debugging 11_unit_testing 12_dynamic_loading \
+           13_abi_stability_and_pimpl
 
 EXERCISES = ex01_include_guard ex02_macro_debug ex03_namespace_api \
-            ex04_static_library_shape ex05_assert_tests
+            ex04_static_library_shape ex05_assert_tests ex06_pimpl_sensor_driver
 
 BUILD_DIR = build
 

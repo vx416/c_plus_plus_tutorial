@@ -4,12 +4,13 @@ SANITIZE_FLAGS = -fsanitize=address -g
 
 # 範例檔案
 EXAMPLES = 01_pointers 02_references_vs_pointers 03_dynamic_memory \
-           04_ownership_raii 05_smart_pointers 06_arrays_and_containers
+           04_ownership_raii 05_smart_pointers 06_arrays_and_containers \
+           07_memory_layout_and_bits
 
 # 練習題
 EXERCISES = ex01_pointer_swap ex02_array_reverse ex03_find_max \
             ex04_dynamic_matrix ex05_raii_logger ex06_unique_ptr_list \
-            ex07_vector_stats
+            ex07_vector_stats ex08_register_bitfields
 
 BUILD_DIR = build
 
