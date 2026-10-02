@@ -11,8 +11,12 @@
  *   3. explicit dynamic loading
  *   4. memory mapping
  *   5. tradeoffs
+ *   6. 真實 <dlfcn.h> 實戰：dlopen / dlsym / dlerror 與 extern "C" Plugin Entry
  */
 
+#include <dlfcn.h>
+
+#include <cstring>
 #include <iostream>
 using namespace std;
 
@@ -167,11 +171,45 @@ void tradeoffs_demo() {
     cout << "  cost: runtime search paths, ABI compatibility, version management" << endl << endl;
 }
 
+// ============================================================
+// 6. 真實 <dlfcn.h> 實戰：dlopen / dlsym / dlerror
+// ============================================================
+// 本章重點：
+//   1. `dlopen(nullptr, RTLD_LAZY)` 會取得目前 process 已載入符號表的 handle。
+//   2. `dlsym(RTLD_DEFAULT, "strlen")` 可以在執行期用字串名稱查找已載入 shared library 的函式位址！
+//   3. 為什麼 Plugin / Android HAL Legacy `hw_get_module` 入口函式都規定寫 `extern "C"`？
+//      因為 C++ 會把函式名稱 mangle 成 `_Z13create_pluginv`，而 `extern "C"` 維持原名 `"create_plugin"`，
+//      `dlsym(handle, "create_plugin")` 才找得到！
+void live_dlopen_dlsym_demo() {
+    // Output:
+    // === live dlopen / dlsym (<dlfcn.h>) ===
+    //   dlsym("strlen") resolved -> strlen("android_hal") = 11
+    //   missing symbol lookup failed as expected
+    //
+    cout << "=== live dlopen / dlsym (<dlfcn.h>) ===" << endl;
+
+    dlerror();  // 先清除舊的錯誤狀態
+    using StrlenFn = size_t (*)(const char*);
+    void* sym = dlsym(RTLD_DEFAULT, "strlen");
+    if (sym != nullptr) {
+        auto fn = reinterpret_cast<StrlenFn>(sym);
+        cout << "  dlsym(\"strlen\") resolved -> strlen(\"android_hal\") = "
+             << fn("android_hal") << endl;
+    }
+
+    void* missing = dlsym(RTLD_DEFAULT, "non_existent_plugin_entry_xyz");
+    if (missing == nullptr && dlerror() != nullptr) {
+        cout << "  missing symbol lookup failed as expected" << endl;
+    }
+    cout << endl;
+}
+
 int main() {
     why_dynamic_linking_demo();
     normal_dynamic_link_demo();
     explicit_dynamic_loading_demo();
     memory_mapping_demo();
     tradeoffs_demo();
+    live_dlopen_dlsym_demo();
     return 0;
 }
